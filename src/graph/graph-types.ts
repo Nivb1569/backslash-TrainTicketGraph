@@ -9,7 +9,7 @@ export interface Node {
   path?: string;
   publicExposed?: boolean;
   metadata?: Record<string, unknown>;
-  vulnerabillity: Vulnerability[];
+  vulnerabilities?: Vulnerability[];
 }
 
 export interface Vulnerability {
@@ -18,3 +18,25 @@ export interface Vulnerability {
   message: string;
   metadata?: Record<string, unknown>;
 }
+
+export interface OriginalEdge {
+  from: string;
+  to: string | string[];
+}
+
+export interface Edge {
+  from: string;
+  to: string[];
+}
+
+export interface OriginalGraph {
+  nodes: Node[];
+  edges: OriginalEdge[];
+}
+
+export interface Graph {
+  nodesByName: Map<string, Node>;
+  adjacency: Map<string, string[]>;
+}
+
+
