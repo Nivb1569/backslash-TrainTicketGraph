@@ -38,5 +38,3 @@ export interface Graph {
   nodesByName: Map<string, Node>;
   adjacency: Map<string, string[]>;
 }
-
-
