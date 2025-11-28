@@ -1,6 +1,9 @@
 import express from "express";
 import cors from "cors";
 import { loadGraphFromFile } from "./graph/graph-loader";
+import { Route } from "./graph/graph-types";
+
+let cachedRoutes: Route[] | null = null;
 
 const app = express();
 const PORT = process.env.PORT || 3000;

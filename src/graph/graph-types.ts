@@ -38,3 +38,10 @@ export interface Graph {
   nodesByName: Map<string, Node>;
   adjacency: Map<string, string[]>;
 }
+
+export type Route = {
+  nodes: Node[];
+  startsAtPublic: boolean;
+  endsAtSink: boolean;
+  hasVulnerabilities: boolean;
+};

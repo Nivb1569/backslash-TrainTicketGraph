@@ -1,4 +1,6 @@
-import { Node } from "./graph-types";
+import { Node, NodeKind } from "./graph-types";
+
+const SINK_KINDS: ReadonlyArray<NodeKind> = ["rds"];
 
 export function isPublicNode(node: Node): boolean
 {
@@ -6,7 +8,7 @@ export function isPublicNode(node: Node): boolean
 }
 
 export function isSinkNode(node: Node): boolean {
-  return node.kind === "rds" || node.kind === "sqs";
+  return SINK_KINDS.includes(node.kind);
 }
 
 export function nodeHasVulnerabilities(node:Node) : boolean
