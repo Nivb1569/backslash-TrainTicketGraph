@@ -1,4 +1,4 @@
-export type NodeKind = "service" | "rds" | "sqs";
+export type NodeKind = "service" | "rds" | "sqs" | "sql";
 export type VulnerabilitySeverity = "low" | "medium" | "high";
 
 export interface Node {
@@ -39,9 +39,10 @@ export interface Graph {
   adjacency: Map<string, string[]>;
 }
 
-export type Route = {
-  nodes: Node[];
-  startsAtPublic: boolean;
-  endsAtSink: boolean;
-  hasVulnerabilities: boolean;
-};
+export interface ClientNode extends Node {
+  to: string[];
+}
+
+export interface ClientGraph {
+  nodes: ClientNode[];
+}
