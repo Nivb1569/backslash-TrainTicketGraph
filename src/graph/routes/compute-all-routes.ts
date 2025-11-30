@@ -3,6 +3,7 @@ import { Route } from "./route-types";
 import { isPublicNode, isSinkNode, nodeHasVulnerabilities } from "../graph-utils";
 
 export function computeAllRoutes(graph: Graph): Route[] {
+  console.log("[computeAllRoutes] computing all routes from graph...");
   const routes: Route[] = [];
 
   function dfs(currentName: string, path: Node[], visited: Set<string>) {
@@ -47,5 +48,6 @@ export function computeAllRoutes(graph: Graph): Route[] {
     dfs(startName, [], new Set<string>());
   }
 
+  console.log(`[computeAllRoutes] done. total routes: ${routes.length}`);
   return routes;
 }

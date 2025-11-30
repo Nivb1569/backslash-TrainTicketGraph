@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import { graphService } from "./index";
 import { RouteFilter } from "./routes/route-service";
+import { ClientRoute } from "./routes/route-types";
 
 export function createGraphRouter(): Router {
   const router = Router();
@@ -16,7 +17,9 @@ export function createGraphRouter(): Router {
 
     const graph = graphService.getClientGraph();
     const routes = graphService.getRoutes(filter);
-
+    const clientRoutes: ClientRoute[] = routes.map((route) => ({
+        nodes: route.nodes,
+    }));
     console.log("[GET] /graph - success");
 
     res.json({

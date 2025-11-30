@@ -6,3 +6,7 @@ export type Route = {
   endsAtSink: boolean;
   hasVulnerabilities: boolean;
 };
+
+export type ClientRoute = {
+  nodes: Node[];
+};
