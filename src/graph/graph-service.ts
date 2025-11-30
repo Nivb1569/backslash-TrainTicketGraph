@@ -2,6 +2,7 @@ import { Graph } from "./graph-types";
 import { loadGraphFromFile } from "./graph-loader";
 import { toClientGraph } from "./graph-client-mapper";
 import { ClientGraph } from "./graph-types";
+import { getRoutesWithFilter, RouteFilter } from "./routes/route-service";
 
 export class GraphService {
   private graph: Graph;
@@ -17,5 +18,9 @@ export class GraphService {
 
   getClientGraph(): ClientGraph {
     return toClientGraph(this.graph);
+  }
+
+  getRoutes(filter: RouteFilter) {
+    return getRoutesWithFilter(filter, this.graph);
   }
 }

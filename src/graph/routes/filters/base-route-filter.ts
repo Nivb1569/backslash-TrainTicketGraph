@@ -5,10 +5,15 @@ export abstract class BaseRouteFilter {
 
   protected abstract matches(route: Route): boolean;
 
-  getFilteredRoutes(allRoutes: Route[]): Route[] {
+  getFilteredRoutes(allRoutes: Route[], name: string): Route[] {
     if (this.cachedRoutes === null) {
-      this.cachedRoutes = allRoutes.filter(r => this.matches(r));
+      console.log(`[${name}] computing filtered routes from allRoutes (${allRoutes.length})`);
+      this.cachedRoutes = allRoutes.filter((r) => this.matches(r));
+      console.log(`[${name}] done. cached ${this.cachedRoutes.length} routes`);
+    } else {
+      console.log(`[${name}] using cached routes (${this.cachedRoutes.length})`);
     }
+
     return this.cachedRoutes;
   }
 }

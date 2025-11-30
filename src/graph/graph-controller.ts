@@ -1,22 +1,29 @@
 import { Router, Request, Response } from "express";
 import { graphService } from "./index";
-import {RouteFilter} from "./routes/route-service";
+import { RouteFilter } from "./routes/route-service";
 
 export function createGraphRouter(): Router {
   const router = Router();
 
-  router.get("/graph", (_req: Request, res: Response) => {
+  router.get("/graph", (req: Request, res: Response) => {
     console.log("[GET] /graph - start");
+
     const filter: RouteFilter = {
-        publicOnly: _req.query.publicOnly === "true",
-        sinkOnly: _req.query.sinkOnly === "true",
-        vulnerableOnly: _req.query.vulnerableOnly === "true",
+      publicOnly: req.query.publicOnly === "true",
+      sinkOnly: req.query.sinkOnly === "true",
+      vulnerableOnly: req.query.vulnerableOnly === "true",
     };
-    const clientGraph = graphService.getClientGraph();
+
+    const graph = graphService.getClientGraph();
+    const routes = graphService.getRoutes(filter);
 
     console.log("[GET] /graph - success");
-    res.json(clientGraph);
+
+    res.json({
+      graph,
+      routes,
+    });
   });
 
-    return router;
+  return router;
 }

@@ -19,7 +19,11 @@ const vulnerableFilter = new VulnerableFilter();
 
 function getAllRoutes(graph: Graph): Route[] {
   if (cachedAllRoutes === null) {
+    console.log("Route calc.")
     cachedAllRoutes = computeAllRoutes(graph);
+  }
+  else {
+    console.log("Route from the cache.")
   }
   return cachedAllRoutes;
 }
@@ -35,16 +39,17 @@ export function getRoutesWithFilter(filter: RouteFilter, graph: Graph): Route[] 
   const activeArrays: Route[][] = [];
 
   if (filter.publicOnly) {
-    activeArrays.push(publicFilter.getFilteredRoutes(allRoutes));
+    activeArrays.push(publicFilter.getFilteredRoutes(allRoutes, "PublicFilter"));
   }
   if (filter.sinkOnly) {
-    activeArrays.push(sinkFilter.getFilteredRoutes(allRoutes));
+    activeArrays.push(sinkFilter.getFilteredRoutes(allRoutes, "SinkFilter"));
   }
   if (filter.vulnerableOnly) {
-    activeArrays.push(vulnerableFilter.getFilteredRoutes(allRoutes));
+    activeArrays.push(vulnerableFilter.getFilteredRoutes(allRoutes, "VulnerableFilter"));
   }
 
   if (activeArrays.length === 0) {
+    console.log("[getRoutesWithFilter] no filters, returning all routes");
     return allRoutes;
   }
 
@@ -53,5 +58,6 @@ export function getRoutesWithFilter(filter: RouteFilter, graph: Graph): Route[] 
     result = intersect(result, arr);
   }
 
+  console.log(`[getRoutesWithFilter] returning ${result.length} routes after filters`);
   return result;
 }
