@@ -19,12 +19,9 @@ const vulnerableFilter = new VulnerableFilter();
 
 function getAllRoutes(graph: Graph): Route[] {
   if (cachedAllRoutes === null) {
-    console.log("Route calc.")
     cachedAllRoutes = computeAllRoutes(graph);
   }
-  else {
-    console.log("Route from the cache.")
-  }
+
   return cachedAllRoutes;
 }
 
