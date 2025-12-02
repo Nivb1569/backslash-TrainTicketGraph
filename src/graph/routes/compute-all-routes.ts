@@ -3,8 +3,28 @@ import { Route } from "./route-types";
 import { isPublicNode, isSinkNode, nodeHasVulnerabilities } from "../graph-utils";
 
 export function computeAllRoutes(graph: Graph): Route[] {
-  console.log("[computeAllRoutes] computing all routes from graph...");
+  console.log("[computeAllRoutes] computing all routes from graph (with prefixes)...");
   const routes: Route[] = [];
+
+  function addRoute(path: Node[]) {
+    if (path.length === 0) {
+      return;
+    }
+
+    const startNode = path[0];
+    const endNode = path[path.length - 1];
+
+    const startsAtPublic = startNode ? isPublicNode(startNode) : false;
+    const endsAtSink = endNode ? isSinkNode(endNode) : false;
+    const hasVulnerabilities = path.some((n) => nodeHasVulnerabilities(n));
+
+    routes.push({
+      nodes: [...path],
+      startsAtPublic,
+      endsAtSink,
+      hasVulnerabilities,
+    });
+  }
 
   function dfs(currentName: string, path: Node[], visited: Set<string>) {
     if (visited.has(currentName)) {
@@ -19,25 +39,12 @@ export function computeAllRoutes(graph: Graph): Route[] {
     path.push(currentNode);
     visited.add(currentName);
 
+    addRoute(path);
+
     const neighbors = graph.adjacency.get(currentName) ?? [];
-    const isSink = isSinkNode(currentNode);
-    const isLeaf = neighbors.length === 0;
 
-    if (isLeaf) {
-      const startNode = path[0];
-      const startsAtPublic = startNode ? isPublicNode(startNode) : false;
-      const hasVulnerabilities = path.some((n) => nodeHasVulnerabilities(n));
-
-      routes.push({
-        nodes: [...path],
-        startsAtPublic,
-        endsAtSink: isSink,
-        hasVulnerabilities,
-      });
-    } else {
-      for (const nextName of neighbors) {
-        dfs(nextName, path, visited);
-      }
+    for (const nextName of neighbors) {
+      dfs(nextName, path, visited);
     }
 
     path.pop();
