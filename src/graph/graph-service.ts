@@ -2,8 +2,8 @@ import { Graph } from "./graph-types";
 import { loadGraphFromFile } from "./graph-loader";
 import { toGraphDto } from "./graph-client-mapper";
 import { GraphDto } from "./graph-types";
-import { getRoutesWithFilter, RouteFilter } from "./routes/route-service";
-import { RouteDto } from "./routes/route-types";
+import { getRoutesWithFilter } from "./routes/route-service";
+import { RouteDto, RouteFilter } from "./routes/route-types";
 import { buildRouteFilterFromQuery } from "./routes/filters/route-filter-utils";
 import { toRouteDtos } from "./routes/route-mapper";
 

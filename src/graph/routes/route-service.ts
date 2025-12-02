@@ -3,12 +3,7 @@ import { Route } from "./route-types";
 import { routesCache } from "./route-cache";
 import { logger } from "../../logger";
 import { FILTERS_CONFIG } from "./route-filters-registry";
-
-export interface RouteFilter {
-  publicOnly?: boolean;
-  sinkOnly?: boolean;
-  vulnerableOnly?: boolean;
-}
+import { RouteFilter } from "./route-types";
 
 function intersect(a: Route[], b: Route[]): Route[] {
   const setB = new Set(b);

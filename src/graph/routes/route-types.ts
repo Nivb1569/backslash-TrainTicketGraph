@@ -10,3 +10,9 @@ export type Route = {
 export type RouteDto = {
   nodes: Node[];
 };
+
+export interface RouteFilter {
+  publicOnly?: boolean;
+  sinkOnly?: boolean;
+  vulnerableOnly?: boolean;
+}

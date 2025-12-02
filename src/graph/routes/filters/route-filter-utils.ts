@@ -1,5 +1,5 @@
 import { ParsedQs } from "qs";
-import { RouteFilter } from "../route-service";
+import { RouteFilter } from "../route-types";
 
 export function buildRouteFilterFromQuery(query: ParsedQs): RouteFilter {
   return {
