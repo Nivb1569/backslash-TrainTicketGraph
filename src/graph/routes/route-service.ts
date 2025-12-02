@@ -4,6 +4,7 @@ import { computeAllRoutes } from "./compute-all-routes"
 import { PublicFilter } from "./filters/public-filter";
 import { SinkFilter } from "./filters/sink-filter";
 import { VulnerableFilter } from "./filters/vulnerability-filter";
+import { logger } from "../../logger";
 
 export interface RouteFilter {
   publicOnly?: boolean;
@@ -46,7 +47,10 @@ export function getRoutesWithFilter(filter: RouteFilter, graph: Graph): Route[] 
   }
 
   if (activeArrays.length === 0) {
-    console.log("[getRoutesWithFilter] no filters, returning all routes");
+      logger.info(
+      { filter },
+      "[getRoutesWithFilter] no filters, returning all routes"
+    );
     return allRoutes;
   }
 
@@ -54,7 +58,9 @@ export function getRoutesWithFilter(filter: RouteFilter, graph: Graph): Route[] 
   for (const arr of activeArrays) {
     result = intersect(result, arr);
   }
-
-  console.log(`[getRoutesWithFilter] returning ${result.length} routes after filters`);
+  logger.info(
+    { filter, resultCount: result.length },
+    "[getRoutesWithFilter] returning filtered routes"
+  );
   return result;
 }
