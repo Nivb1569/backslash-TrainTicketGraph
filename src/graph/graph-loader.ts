@@ -1,12 +1,6 @@
 import fs from "fs";
 import path from "path";
-import {
-  Graph,
-  OriginalGraph,
-  Node,
-  OriginalEdge,
-  Edge,
-} from "./graph-types";
+import { Graph, OriginalGraph, Node, OriginalEdge, Edge } from "./graph-types";
 
 function normalizeToArray(to: string | string[]): string[] {
   return Array.isArray(to) ? to : [to];

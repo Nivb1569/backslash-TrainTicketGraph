@@ -1,13 +1,17 @@
 import { Graph, Node } from "../graph-types";
 import { Route } from "./route-types";
-import { isPublicNode, isSinkNode, nodeHasVulnerabilities } from "../graph-utils";
+import {
+  isPublicNode,
+  isSinkNode,
+  nodeHasVulnerabilities,
+} from "../graph-utils";
 import { logger } from "../../logger";
 
 export function computeAllRoutes(graph: Graph): Route[] {
-    logger.debug(
-        { nodeCount: graph.nodesByName.size },
-        "[computeAllRoutes] computing all routes from graph (with prefixes)..."
-    );
+  logger.debug(
+    { nodeCount: graph.nodesByName.size },
+    "[computeAllRoutes] computing all routes from graph (with prefixes)..."
+  );
   const routes: Route[] = [];
 
   function addRoute(path: Node[]) {
@@ -59,7 +63,7 @@ export function computeAllRoutes(graph: Graph): Route[] {
     dfs(startName, [], new Set<string>());
   }
 
-    logger.debug(
+  logger.debug(
     { routeCount: routes.length },
     "[computeAllRoutes] done computing routes"
   );

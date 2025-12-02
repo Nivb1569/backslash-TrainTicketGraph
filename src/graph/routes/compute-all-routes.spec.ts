@@ -66,7 +66,9 @@ describe("computeAllRoutes", () => {
     );
 
     const fullRoute = routes.find(
-      (r) => r.nodes.map((n) => n.name).join("->") === "frontend->order-service->prod-postgresdb"
+      (r) =>
+        r.nodes.map((n) => n.name).join("->") ===
+        "frontend->order-service->prod-postgresdb"
     );
     expect(fullRoute).toBeDefined();
     expect(fullRoute!.startsAtPublic).toBe(true);
@@ -90,7 +92,7 @@ describe("computeAllRoutes", () => {
     expect(dbOnly!.hasVulnerabilities).toBe(false);
   });
 
-    test("branching graph with mixed public, sink and vulnerable nodes", () => {
+  test("branching graph with mixed public, sink and vulnerable nodes", () => {
     const frontend: Node = {
       name: "frontend",
       kind: "service",
