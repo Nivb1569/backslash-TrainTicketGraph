@@ -18,7 +18,6 @@ The project focuses on:
 - Clean, strongly typed TypeScript architecture  
 - REST API for graph exploration  
 
----
 
 ## Features
 
@@ -33,7 +32,6 @@ The project focuses on:
 - Apply filters using AND logic
 - Express API exposing graph and route data
 
----
 
 ## Tech Stack
 
@@ -43,36 +41,32 @@ The project focuses on:
 - **ts-node** – Direct execution of TypeScript  
 - **Jest** – Unit testing  
 
----
 
 ## Installation
 
-```bash
-git clone <repository-url>
-cd backslash-train-ticket-graph
-npm install
+`git clone https://github.com/Nivb1569/backslash-TrainTicketGraph.git`
+
+`cd backslash-train-ticket-graph`
+
+`npm install`
 
 ## Running the Project
 
-```bash
-npm run start
+`npm run start`
 
 Server will run at:
 
-```bash
-npm run start
-http://localhost:3000
+`http://localhost:3000`
 
 ## API
 
-### `GET /graph`
+`GET /graph`
 
-Returns all computed routes.  
+Return the graph and all computed routes.  
 Supports optional query parameters for filtering.
 
----
 
-### Query Parameters
+## Query Parameters
 
 | Query            | Type    | Description                                           |
 |------------------|---------|-------------------------------------------------------|
@@ -80,18 +74,13 @@ Supports optional query parameters for filtering.
 | `sinkOnly`       | boolean | Only routes ending at a sink node (RDS/SQL)           |
 | `vulnerableOnly` | boolean | Only routes that pass through a vulnerable node       |
 
----
 
-### Example Request
+## Example Request
 
-\`\`\`
-GET /graph?publicOnly=true&sinkOnly=true
-\`\`\`
+`GET /graph?publicOnly=true&sinkOnly=true`
 
 ## Testing
 
 Run tests:
 
-\`\`\`bash
-npm run test
-\`\`\`
+`npm run test`
