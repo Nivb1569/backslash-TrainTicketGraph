@@ -1,20 +1,14 @@
 import { Graph } from "../graph-types";
 import { Route } from "./route-types";
-import { PublicFilter } from "./filters/public-filter";
-import { SinkFilter } from "./filters/sink-filter";
-import { VulnerableFilter } from "./filters/vulnerability-filter";
 import { routesCache } from "./route-cache";
 import { logger } from "../../logger";
+import { FILTERS_CONFIG } from "./route-filters-registry";
 
 export interface RouteFilter {
   publicOnly?: boolean;
   sinkOnly?: boolean;
   vulnerableOnly?: boolean;
 }
-
-const publicFilter = new PublicFilter();
-const sinkFilter = new SinkFilter();
-const vulnerableFilter = new VulnerableFilter();
 
 function intersect(a: Route[], b: Route[]): Route[] {
   const setB = new Set(b);
@@ -27,19 +21,9 @@ export function getRoutesWithFilter(
 ): Route[] {
   const allRoutes = routesCache.getAllRoutes(graph);
 
-  const activeArrays: Route[][] = [];
+  const enabledFilters = FILTERS_CONFIG.filter((cfg) => filter[cfg.flag]);
 
-  if (filter.publicOnly) {
-    activeArrays.push(publicFilter.getFilteredRoutes(allRoutes));
-  }
-  if (filter.sinkOnly) {
-    activeArrays.push(sinkFilter.getFilteredRoutes(allRoutes));
-  }
-  if (filter.vulnerableOnly) {
-    activeArrays.push(vulnerableFilter.getFilteredRoutes(allRoutes));
-  }
-
-  if (activeArrays.length === 0) {
+  if (enabledFilters.length === 0) {
     logger.info(
       { filter },
       "[getRoutesWithFilter] no filters, returning all routes"
@@ -48,12 +32,18 @@ export function getRoutesWithFilter(
   }
 
   let result: Route[] = allRoutes;
-  for (const arr of activeArrays) {
-    result = intersect(result, arr);
+
+  for (const cfg of enabledFilters) {
+    const filtered = cfg.filter.getFilteredRoutes(allRoutes);
+    result = intersect(result, filtered);
   }
 
   logger.info(
-    { filter, resultCount: result.length },
+    {
+      filter,
+      enabledFlags: enabledFilters.map((f) => f.flag),
+      resultCount: result.length,
+    },
     "[getRoutesWithFilter] returning filtered routes"
   );
 
