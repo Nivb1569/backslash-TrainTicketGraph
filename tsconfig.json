@@ -6,7 +6,7 @@
     "module": "commonjs",
     "target": "es2019",
     "lib": ["esnext"],
-    "types": ["node"],
+    "types": ["node", "jest"],
     "esModuleInterop": true,
 
     "sourceMap": true,
