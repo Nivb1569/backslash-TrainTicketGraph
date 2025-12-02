@@ -1,12 +1,12 @@
 import { Route } from "./route-types";
-import { ClientRoute } from "./route-types";
+import { RouteDto } from "./route-types";
 
-export function toClientRoute(route: Route): ClientRoute {
+export function toRouteDto(route: Route): RouteDto {
   return {
     nodes: route.nodes,
   };
 }
 
-export function toClientRoutes(routes: Route[]): ClientRoute[] {
-  return routes.map(toClientRoute);
+export function toRouteDtos(routes: Route[]): RouteDto[] {
+  return routes.map(toRouteDto);
 }

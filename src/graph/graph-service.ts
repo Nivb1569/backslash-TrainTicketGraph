@@ -3,9 +3,9 @@ import { loadGraphFromFile } from "./graph-loader";
 import { toGraphDto } from "./graph-client-mapper";
 import { GraphDto } from "./graph-types";
 import { getRoutesWithFilter, RouteFilter } from "./routes/route-service";
-import { ClientRoute } from "./routes/route-types";
+import { RouteDto } from "./routes/route-types";
 import { buildRouteFilterFromQuery } from "./routes/filters/route-filter-utils";
-import { toClientRoutes } from "./routes/route-mapper";
+import { toRouteDtos } from "./routes/route-mapper";
 
 export class GraphService {
   private graph: Graph;
@@ -32,16 +32,16 @@ export class GraphService {
 
     const graph = this.getGraphDto();
     const routes = this.getRoutes(filter);
-    const clientRoutes: ClientRoute[] = toClientRoutes(routes);
+    const RouteDtos: RouteDto[] = toRouteDtos(routes);
 
     return {
       graph,
-      routes: clientRoutes,
+      routes: RouteDtos,
     };
   }
 }
 
 export interface GraphWithRoutesResult {
   graph: GraphDto;
-  routes: ClientRoute[];
+  routes: RouteDto[];
 }

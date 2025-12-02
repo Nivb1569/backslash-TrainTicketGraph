@@ -7,6 +7,6 @@ export type Route = {
   hasVulnerabilities: boolean;
 };
 
-export type ClientRoute = {
+export type RouteDto = {
   nodes: Node[];
 };
