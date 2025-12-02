@@ -10,14 +10,3 @@ export type Route = {
 export type ClientRoute = {
   nodes: Node[];
 };
-
-export enum RouteFilterId {
-  Public = "public",
-  Sink = "sink",
-  Vulnerable = "vulnerable",
-}
-
-export interface RouteFilterStrategy {
-  id: RouteFilterId;
-  apply(routes: Route[]): Route[];
-}

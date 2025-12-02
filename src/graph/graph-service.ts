@@ -2,8 +2,9 @@ import { Graph } from "./graph-types";
 import { loadGraphFromFile } from "./graph-loader";
 import { toGraphDto } from "./graph-client-mapper";
 import { GraphDto } from "./graph-types";
-import { getRoutesWithFilter, RoutesRequest } from "./routes/route-service";
+import { getRoutesWithFilter, RouteFilter } from "./routes/route-service";
 import { ClientRoute } from "./routes/route-types";
+import { buildRouteFilterFromQuery } from "./routes/filters/route-filter-utils";
 import { toClientRoutes } from "./routes/route-mapper";
 
 export class GraphService {
@@ -22,18 +23,20 @@ export class GraphService {
     return toGraphDto(this.graph);
   }
 
-  getRoutes(request: RoutesRequest): ClientRoute[] {
-    const routes = getRoutesWithFilter(request, this.graph);
-    return toClientRoutes(routes);
+  getRoutes(filter: RouteFilter) {
+    return getRoutesWithFilter(filter, this.graph);
   }
 
-  getGraphWithRoutes(request: RoutesRequest): GraphWithRoutesResult {
+  getGraphWithRoutesFromQuery(query: any): GraphWithRoutesResult {
+    const filter = buildRouteFilterFromQuery(query);
+
     const graph = this.getGraphDto();
-    const routes = this.getRoutes(request);
+    const routes = this.getRoutes(filter);
+    const clientRoutes: ClientRoute[] = toClientRoutes(routes);
 
     return {
       graph,
-      routes,
+      routes: clientRoutes,
     };
   }
 }

@@ -1,10 +1,10 @@
+import { BaseRouteFilter } from "./base-route-filter";
 import { Route } from "../route-types";
-import { RouteFilterId, RouteFilterStrategy } from "../route-types";
 
-export class PublicFilter implements RouteFilterStrategy {
-  readonly id = RouteFilterId.Public;
+export class PublicFilter extends BaseRouteFilter {
+  readonly id = "PublicFilter";
 
-  apply(routes: Route[]): Route[] {
-    return routes.filter((r) => r.startsAtPublic);
+  protected matches(route: Route): boolean {
+    return route.startsAtPublic;
   }
 }
