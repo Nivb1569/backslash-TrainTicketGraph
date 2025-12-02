@@ -8,15 +8,10 @@ import { buildRouteFilterFromQuery } from "./routes/filters/route-filter-utils";
 import { toRouteDtos } from "./routes/route-mapper";
 
 export class GraphService {
-  private graph: Graph;
-
-  constructor(graph: Graph) {
-    this.graph = graph;
-  }
+  constructor(private readonly graph: Graph) {}
 
   static fromFile(relativePath: string): GraphService {
-    const graph = loadGraphFromFile(relativePath);
-    return new GraphService(graph);
+    return new GraphService(loadGraphFromFile(relativePath));
   }
 
   getGraphDto(): GraphDto {
