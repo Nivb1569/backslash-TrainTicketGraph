@@ -89,4 +89,97 @@ describe("computeAllRoutes", () => {
     expect(dbOnly!.endsAtSink).toBe(true);
     expect(dbOnly!.hasVulnerabilities).toBe(false);
   });
+
+    test("branching graph with mixed public, sink and vulnerable nodes", () => {
+    const frontend: Node = {
+      name: "frontend",
+      kind: "service",
+      publicExposed: true,
+    };
+
+    const mid: Node = {
+      name: "mid-service",
+      kind: "service",
+    };
+
+    const db: Node = {
+      name: "prod-postgresdb",
+      kind: "rds",
+      vulnerabilities: [
+        {
+          file: "db.ts",
+          severity: "medium",
+          message: "db vuln",
+        },
+      ],
+    };
+
+    const helper: Node = {
+      name: "helper-service",
+      kind: "service",
+      vulnerabilities: [
+        {
+          file: "helper.ts",
+          severity: "low",
+          message: "helper vuln",
+        },
+      ],
+    };
+
+    const graph: Graph = buildGraph(
+      [frontend, mid, db, helper],
+      [
+        ["frontend", ["mid-service", "prod-postgresdb"]],
+        ["mid-service", ["prod-postgresdb"]],
+      ]
+    );
+
+    const routes = computeAllRoutes(graph);
+
+    expect(routes.length).toBe(8);
+
+    const asStrings = routes.map((r) => r.nodes.map((n) => n.name).join("->"));
+
+    expect(asStrings).toEqual(
+      expect.arrayContaining([
+        "frontend",
+        "mid-service",
+        "prod-postgresdb",
+        "helper-service",
+        "frontend->mid-service",
+        "frontend->prod-postgresdb",
+        "mid-service->prod-postgresdb",
+        "frontend->mid-service->prod-postgresdb",
+      ])
+    );
+
+    const fullRoute = routes.find(
+      (r) =>
+        r.nodes.map((n) => n.name).join("->") ===
+        "frontend->mid-service->prod-postgresdb"
+    );
+    expect(fullRoute).toBeDefined();
+    expect(fullRoute!.startsAtPublic).toBe(true);
+    expect(fullRoute!.endsAtSink).toBe(true);
+    expect(fullRoute!.hasVulnerabilities).toBe(true);
+
+    const helperOnly = routes.find(
+      (r) => r.nodes.length === 1 && r.nodes[0]!.name === "helper-service"
+    );
+    expect(helperOnly).toBeDefined();
+    expect(helperOnly!.startsAtPublic).toBe(false);
+    expect(helperOnly!.endsAtSink).toBe(false);
+    expect(helperOnly!.hasVulnerabilities).toBe(true);
+
+    const midToDb = routes.find(
+      (r) =>
+        r.nodes.length === 2 &&
+        r.nodes[0]!.name === "mid-service" &&
+        r.nodes[1]!.name === "prod-postgresdb"
+    );
+    expect(midToDb).toBeDefined();
+    expect(midToDb!.startsAtPublic).toBe(false);
+    expect(midToDb!.endsAtSink).toBe(true);
+    expect(midToDb!.hasVulnerabilities).toBe(true);
+  });
 });
