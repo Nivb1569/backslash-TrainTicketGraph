@@ -1,28 +1,21 @@
 import { Router, Request, Response } from "express";
 import { graphService } from "./index";
-import { RouteFilter } from "./routes/route-service";
-import { ClientRoute } from "./routes/route-types";
-import { buildRouteFilterFromQuery } from "./routes/filters/route-filter-utils";
-import { toClientRoutes } from "./routes/route-mapper";
+import { logger } from "../logger";
 
 export function createGraphRouter(): Router {
   const router = Router();
 
   router.get("/graph", (req: Request, res: Response) => {
-    console.log("[GET] /graph - start");
+    logger.info({ query: req.query }, "[GET] /graph - start");
 
-    const filter: RouteFilter = buildRouteFilterFromQuery(req.query);
+    const result = graphService.getGraphWithRoutesFromQuery(req.query);
 
-    const graph = graphService.getClientGraph();
-    const routes = graphService.getRoutes(filter);
-    const clientRoutes: ClientRoute[] = toClientRoutes(routes);
+    logger.info(
+      { routeCount: result.routes.length },
+      "[GET] /graph - success"
+    );
 
-    console.log("[GET] /graph - success");
-
-    res.json({
-      graph,
-      routes: clientRoutes,
-    });
+    res.json(result);
   });
 
   return router;
