@@ -10,10 +10,7 @@ export function createGraphRouter(): Router {
 
     const result = graphService.getGraphWithRoutesFromQuery(req.query);
 
-    logger.info(
-      { routeCount: result.routes.length },
-      "[GET] /graph - success"
-    );
+    logger.info({ routeCount: result.routes.length }, "[GET] /graph - success");
 
     res.json(result);
   });

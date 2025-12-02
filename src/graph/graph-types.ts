@@ -39,10 +39,10 @@ export interface Graph {
   adjacency: Map<string, string[]>;
 }
 
-export interface ClientNode extends Node {
+export interface NodeDto extends Node {
   to: string[];
 }
 
-export interface ClientGraph {
-  nodes: ClientNode[];
+export interface GraphDto {
+  nodes: NodeDto[];
 }

@@ -1,7 +1,7 @@
-import { ClientGraph, ClientNode, Graph } from "./graph-types";
+import { GraphDto, NodeDto, Graph } from "./graph-types";
 
-export function toClientGraph(graph: Graph): ClientGraph {
-  const nodes: ClientNode[] = [];
+export function toGraphDto(graph: Graph): GraphDto {
+  const nodes: NodeDto[] = [];
 
   for (const [name, node] of graph.nodesByName.entries()) {
     const neighbors = graph.adjacency.get(name) ?? [];
