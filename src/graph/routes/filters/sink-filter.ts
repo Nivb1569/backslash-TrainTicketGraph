@@ -1,8 +1,10 @@
-import { BaseRouteFilter } from "./base-route-filter";
 import { Route } from "../route-types";
+import { RouteFilterId, RouteFilterStrategy } from "../route-types";
 
-export class SinkFilter extends BaseRouteFilter {
-  protected matches(route: Route): boolean {
-    return route.endsAtSink;
+export class SinkFilter implements RouteFilterStrategy {
+  readonly id = RouteFilterId.Sink;
+
+  apply(routes: Route[]): Route[] {
+    return routes.filter((r) => r.endsAtSink);
   }
 }

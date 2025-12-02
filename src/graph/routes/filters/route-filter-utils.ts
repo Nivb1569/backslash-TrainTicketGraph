@@ -1,10 +1,19 @@
 import { ParsedQs } from "qs";
-import { RouteFilter } from "../route-service";
+import { RoutesRequest } from "../route-service";
+import { RouteFilterId } from "../route-types";
 
-export function buildRouteFilterFromQuery(query: ParsedQs): RouteFilter {
-  return {
-    publicOnly: query.publicOnly === "true",
-    sinkOnly: query.sinkOnly === "true",
-    vulnerableOnly: query.vulnerableOnly === "true",
-  };
+export function buildRoutesRequestFromQuery(query: ParsedQs): RoutesRequest {
+  const filters: RouteFilterId[] = [];
+
+  if (query.publicOnly === "true") {
+    filters.push(RouteFilterId.Public);
+  }
+  if (query.sinkOnly === "true") {
+    filters.push(RouteFilterId.Sink);
+  }
+  if (query.vulnerableOnly === "true") {
+    filters.push(RouteFilterId.Vulnerable);
+  }
+
+  return { filters };
 }

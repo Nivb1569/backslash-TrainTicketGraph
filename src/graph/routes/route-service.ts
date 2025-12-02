@@ -1,63 +1,54 @@
 import { Graph } from "../graph-types";
 import { Route } from "./route-types";
+import { routesCache } from "./route-cache";
 import { PublicFilter } from "./filters/public-filter";
 import { SinkFilter } from "./filters/sink-filter";
 import { VulnerableFilter } from "./filters/vulnerability-filter";
-import { routesCache } from "./route-cache";
+import { RouteFilterId, RouteFilterStrategy } from "./route-types";
 import { logger } from "../../logger";
 
-export interface RouteFilter {
-  publicOnly?: boolean;
-  sinkOnly?: boolean;
-  vulnerableOnly?: boolean;
+export interface RoutesRequest {
+  filters: RouteFilterId[];
 }
 
-const publicFilter = new PublicFilter();
-const sinkFilter = new SinkFilter();
-const vulnerableFilter = new VulnerableFilter();
+const ALL_FILTERS: RouteFilterStrategy[] = [
+  new PublicFilter(),
+  new SinkFilter(),
+  new VulnerableFilter(),
+];
 
-function intersect(a: Route[], b: Route[]): Route[] {
-  const setB = new Set(b);
-  return a.filter((r) => setB.has(r));
-}
+const FILTERS_BY_ID = new Map<RouteFilterId, RouteFilterStrategy>(
+  ALL_FILTERS.map((f) => [f.id, f])
+);
 
 export function getRoutesWithFilter(
-  filter: RouteFilter,
+  request: RoutesRequest,
   graph: Graph
 ): Route[] {
   const allRoutes = routesCache.getAllRoutes(graph);
 
-  const activeArrays: Route[][] = [];
-
-  if (filter.publicOnly) {
-    activeArrays.push(
-      publicFilter.getFilteredRoutes(allRoutes, "PublicFilter")
-    );
-  }
-  if (filter.sinkOnly) {
-    activeArrays.push(sinkFilter.getFilteredRoutes(allRoutes, "SinkFilter"));
-  }
-  if (filter.vulnerableOnly) {
-    activeArrays.push(
-      vulnerableFilter.getFilteredRoutes(allRoutes, "VulnerableFilter")
-    );
-  }
-
-  if (activeArrays.length === 0) {
+  if (!request.filters || request.filters.length === 0) {
     logger.info(
-      { filter },
+      { filters: [] },
       "[getRoutesWithFilter] no filters, returning all routes"
     );
     return allRoutes;
   }
 
-  let result: Route[] = allRoutes;
-  for (const arr of activeArrays) {
-    result = intersect(result, arr);
+  let result = allRoutes;
+
+  for (const filterId of request.filters) {
+    const filter = FILTERS_BY_ID.get(filterId);
+    if (!filter) {
+      logger.warn({ filterId }, "Unknown filter id, skipping");
+      continue;
+    }
+
+    result = filter.apply(result);
   }
 
   logger.info(
-    { filter, resultCount: result.length },
+    { filters: request.filters, resultCount: result.length },
     "[getRoutesWithFilter] returning filtered routes"
   );
 
