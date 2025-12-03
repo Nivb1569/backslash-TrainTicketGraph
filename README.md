@@ -3,6 +3,8 @@
 Graph-based static analysis tool for modeling microservice communication paths, identifying attack routes, and filtering them using security-oriented constraints.  
 This project was implemented as part of a backend home assignment for a security-oriented engineering position.
 
+📄 **Architecture Document** — [ARCHITECTURE.md](ARCHITECTURE.md)
+
 ---
 
 ## Overview
